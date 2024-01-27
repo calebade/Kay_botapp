@@ -1,4 +1,3 @@
-# streamlit_app.py
 import streamlit as st
 import pandas as pd
 from textblob import TextBlob
@@ -28,7 +27,7 @@ def collect_user_feedback(sentiment, user_feedback):
     st.success("Feedback submitted successfully!")
 
 def main():
-    st.title("Sentiment Analysis App with User Feedback")
+    st.title("Sentiment Analysis App")
     
     # User input text area
     user_input = st.text_area("Enter text:", height=150)
