@@ -1,8 +1,5 @@
-
 import streamlit as st
 from textblob import TextBlob
-from flair.models import TextClassifier
-from flair.data import Sentence
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -17,12 +14,17 @@ def analyze_sentiment_textblob(text):
     else:
         return "Neutral"
 
-def analyze_sentiment_flair(text):
-    classifier = TextClassifier.load('sentiment-fast')
-    sentence = Sentence(text)
-    classifier.predict(sentence)
-    sentiment_label = sentence.labels[0].value
-    return sentiment_label.lower().capitalize()
+def analyze_custom_sentiment(text):
+    # Simple custom sentiment analysis function
+    keywords_positive = ["happy", "joy", "excited"]
+    keywords_negative = ["sad", "angry", "disappointed"]
+
+    if any(keyword in text.lower() for keyword in keywords_positive):
+        return "Positive"
+    elif any(keyword in text.lower() for keyword in keywords_negative):
+        return "Negative"
+    else:
+        return "Neutral"
 
 def plot_sentiment_distribution(scores):
     labels = ["Negative", "Neutral", "Positive"]
@@ -44,12 +46,12 @@ def main():
             # Sentiment analysis using TextBlob
             sentiment_textblob = analyze_sentiment_textblob(user_input)
 
-            # Sentiment analysis using Flair
-            sentiment_flair = analyze_sentiment_flair(user_input)
+            # Custom sentiment analysis function
+            sentiment_custom = analyze_custom_sentiment(user_input)
 
             # Display sentiments
             st.write(f"TextBlob Sentiment: {sentiment_textblob}")
-            st.write(f"Flair Sentiment: {sentiment_flair}")
+            st.write(f"Custom Sentiment: {sentiment_custom}")
 
             # Display a sentiment distribution plot
             scores = [0, 0, 0]  # Negative, Neutral, Positive
@@ -60,9 +62,9 @@ def main():
             else:
                 scores[2] += 1
 
-            if sentiment_flair == "Negative":
+            if sentiment_custom == "Negative":
                 scores[0] += 1
-            elif sentiment_flair == "Neutral":
+            elif sentiment_custom == "Neutral":
                 scores[1] += 1
             else:
                 scores[2] += 1
