@@ -1,7 +1,8 @@
-# streamlit_app.py
+
 import streamlit as st
 from textblob import TextBlob
-from transformers import pipeline
+from flair.models import TextClassifier
+from flair.data import Sentence
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -16,10 +17,12 @@ def analyze_sentiment_textblob(text):
     else:
         return "Neutral"
 
-def analyze_sentiment_bert(text):
-    sentiment_pipeline = pipeline("sentiment-analysis")
-    result = sentiment_pipeline(text)
-    return result[0]['label']
+def analyze_sentiment_flair(text):
+    classifier = TextClassifier.load('sentiment-fast')
+    sentence = Sentence(text)
+    classifier.predict(sentence)
+    sentiment_label = sentence.labels[0].value
+    return sentiment_label.lower().capitalize()
 
 def plot_sentiment_distribution(scores):
     labels = ["Negative", "Neutral", "Positive"]
@@ -30,7 +33,7 @@ def plot_sentiment_distribution(scores):
     st.pyplot(fig)
 
 def main():
-    st.title("Sophisticated Sentiment Analysis App")
+    st.title("Sentiment Analysis App")
     
     # User input text area
     user_input = st.text_area("Enter text:", height=150)
@@ -41,12 +44,12 @@ def main():
             # Sentiment analysis using TextBlob
             sentiment_textblob = analyze_sentiment_textblob(user_input)
 
-            # Sentiment analysis using BERT
-            sentiment_bert = analyze_sentiment_bert(user_input)
+            # Sentiment analysis using Flair
+            sentiment_flair = analyze_sentiment_flair(user_input)
 
             # Display sentiments
             st.write(f"TextBlob Sentiment: {sentiment_textblob}")
-            st.write(f"BERT Sentiment: {sentiment_bert}")
+            st.write(f"Flair Sentiment: {sentiment_flair}")
 
             # Display a sentiment distribution plot
             scores = [0, 0, 0]  # Negative, Neutral, Positive
@@ -57,9 +60,9 @@ def main():
             else:
                 scores[2] += 1
 
-            if sentiment_bert == "NEGATIVE":
+            if sentiment_flair == "Negative":
                 scores[0] += 1
-            elif sentiment_bert == "NEUTRAL":
+            elif sentiment_flair == "Neutral":
                 scores[1] += 1
             else:
                 scores[2] += 1
