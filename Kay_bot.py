@@ -1,6 +1,6 @@
 import streamlit as st
 from textblob import TextBlob
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import make_pipeline
 from faker import Faker
@@ -21,7 +21,7 @@ train_data, test_data = train_test_split(synthetic_data, test_size=0.2, random_s
 train_texts, train_labels = zip(*train_data)
 
 # Create and train the model
-model = make_pipeline(CountVectorizer(), MultinomialNB())
+model = make_pipeline(TfidfVectorizer(), MultinomialNB())
 model.fit(train_texts, train_labels)
 
 # Streamlit app
