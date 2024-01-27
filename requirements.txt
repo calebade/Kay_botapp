@@ -1,5 +1,6 @@
-textblob==0.15.3
-transformers==4.11.3
+flair==0.10.5
+torch==1.10.0
 streamlit==1.18.0
+textblob==0.15.3
 matplotlib==3.4.3
 numpy==1.21.2
